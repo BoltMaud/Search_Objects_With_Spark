@@ -1,13 +1,13 @@
 # Date : Nov. 2017
 # Auteur : Montel Alice, Boltenhagen Mathilde
+
 ##########################################################################################
-####                     Version with simple partitions                             ######
+####                   Version with simple partitions and margins                   ######
 ##########################################################################################
 
 import sys
 from pyspark import SparkContext
 from src.main import MapOfBlocks
-
 
 '''
 get the min and max of ra and decl from a csv file or a directory
@@ -30,39 +30,43 @@ def getCoordinatesMinMax(dir,sc):
 
 
 '''
-do the partitioning using MapOfBlocks class WITHOUT MARGIN
-'''
-def partitioning_V1(dir,dir_result,sc,dict):
-    # if there is csv written in the path, then it's only one file
-    if "csv" in dir:
-        rdd=sc.textFile(dir)
-    else :
-        rdd = sc.textFile(dir+"/*.csv")
-
-    rdd.filter(lambda line: len(line) > 0)\
-    .map(lambda line : [ line, line.split(",")[6] , line.split(",")[9] ] )\
-    .map(lambda x : ( dict.get_block_number_without_margin( float(x[1]) , float(x[2]) ) , x[0] ) )\
-    .partitionBy(dict.nbBlocks)\
-    .saveAsHadoopFile(dir_result, "org.apache.hadoop.mapred.TextOutputFormat" )
-
-'''
-get the number of each ra/decl per partition WITHOUT MARGIN
+get the number of each ra/decl per partition WITH MARGINS
 return dict { 1 : [ ..] .. }
 '''
-
-def getNbLinePerPatition_V1(dir, sc, dict):
+def getNbLinePerPatition_V2(dir,sc,dict):
     # if there is csv written in the path, then it's only one file
     if "csv" in dir:
         rdd = sc.textFile(dir)
     else:
         rdd = sc.textFile(dir + "/*.csv")
 
-    tab = rdd.filter(lambda line: len(line) > 0) \
-        .map(lambda line: [line.split(",")[6], line.split(",")[9]]) \
-        .map(lambda x: (dict.get_block_number_without_margin(float(x[0]), float(x[1])), 1)) \
-        .reduceByKey(lambda x, y: x + y).collect()
+    tab=rdd.filter(lambda line: len(line) > 0) \
+        .map(lambda line: [ line.split(",")[6], line.split(",")[9]]) \
+        .map(lambda x: dict.get_block_number_with_margins( float(x[0]), float(x[1]),1)) \
+        .flatMap(lambda x: x.split("_")) \
+        .map(lambda x: x.split(':')) \
+        .map(lambda x : (int(x[0]),1))\
+        .reduceByKey(lambda x,y : x+y).collect()
     return tab
 
+'''
+do the partitioning using MapOfBlocks class WITH MARGINS
+'''
+def partitioning_V2(dir,dir_result,sc,dict):
+    # if there is csv written in the path, then it's only one file
+    if "csv" in dir:
+        rdd=sc.textFile(dir)
+    else :
+        rdd = sc.textFile(dir+"/*.csv")
+
+    return rdd.filter(lambda line: len(line) > 0)\
+    .map(lambda line : [ line, line.split(",")[6] , line.split(",")[9] ] )\
+    .map(lambda x :  dict.get_block_number_with_margins( float(x[1]) , float(x[2]) ,x[0] )   )\
+    .flatMap(lambda x : x.split("_") )\
+    .map(lambda x : x.split(':')) \
+        .map(lambda x: (int(x[0]), x[1])) \
+        .partitionBy(dict.nbBlocks) \
+        .saveAsHadoopFile(dir_result, "org.apache.hadoop.mapred.TextOutputFormat" )
 
 def main(TOTALSIZE, SIZEOFBLOCK):
     #get the name of the source path (file or directory)
@@ -81,10 +85,10 @@ def main(TOTALSIZE, SIZEOFBLOCK):
     resultDirectory= sys.argv[2]
 
     #get the nb of lines without divided
-    nbLinesPerBlocks= getNbLinePerPatition_V1(sourceDirectory, sc, mapOfBlocks)
+    nbLinesPerBlocks= getNbLinePerPatition_V2(sourceDirectory, sc, mapOfBlocks)
 
     #do the partition
-    partitioning_V1(sourceDirectory, resultDirectory, sc, mapOfBlocks)
+    partitioning_V2(sourceDirectory, resultDirectory, sc, mapOfBlocks)
 
     # write the properties in a file
     MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, nbLinesPerBlocks, mapOfBlocks, sc)

@@ -1,9 +1,8 @@
 # Date : Nov. 2017
 # Auteur : Montel Alice, Boltenhagen Mathilde
 ##########################################################################################
-####                     Version with subpartitions and ecliptic coordinates        ######
+####                  Version with simple partitins and ecliptic coordinates        ######
 ##########################################################################################
-
 
 import sys
 from pyspark import SparkContext
@@ -73,26 +72,9 @@ def partitioning_V3(dir,dir_result,sc,dict):
         .partitionBy(dict.nbBlocks) \
         .saveAsHadoopFile(dir_result, "org.apache.hadoop.mapred.TextOutputFormat" )
 
-'''
-get list of the blocks that have 0 line
-'''
-def getListOfEmptyBlocks(nbLinesPerBlocks,nbBlocks):
-    list =[]
-    listOfNotEmptyBlocks=[]
-    print(nbLinesPerBlocks)
-    #get the list of the blocks that have lines
-    for block in nbLinesPerBlocks:
-        listOfNotEmptyBlocks.append(int(block[0]))
-    # create list of available blocks
-    for i in range (0,nbBlocks):
-        if i not in listOfNotEmptyBlocks:
-            list.append(i)
-    return list
 
-# ------------------------------------------------------------------------------------------
-def main(TOTALSIZE, SIZEOFBLOCK,NBLINESPERBLOCK):
-
-     #get the name of the source path (file or directory)
+def main(TOTALSIZE, SIZEOFBLOCK):
+    #get the name of the source path (file or directory)
     sourceDirectory = sys.argv[1]
     sc = SparkContext("local", "App")
 
@@ -110,25 +92,10 @@ def main(TOTALSIZE, SIZEOFBLOCK,NBLINESPERBLOCK):
     #get the nb of lines without divided
     nbLinesPerBlocks= getNbLinePerPatition_V3(sourceDirectory, sc, mapOfBlocks)
 
-    #get the blocks that are empty to use them when divided
-    mapOfBlocks.listOfEmptyBlocks = getListOfEmptyBlocks(nbLinesPerBlocks, mapOfBlocks.nbBlocks)
-
-    #delete the coords of the blocks that are empty
-    mapOfBlocks.deleteCoordIfEmpty()
-
-    #create new blocks with id of the deleted blocks
-    # create blocks only if size of block > nbmax
-    mapOfBlocks.divideBlocks(nbLinesPerBlocks, NBLINESPERBLOCK)
-
     #do the partition
     partitioning_V3(sourceDirectory, resultDirectory, sc, mapOfBlocks)
 
-    #get the new number of lines
-    dictNbLinesPerBlocks_ = getNbLinePerPatition_V3(sourceDirectory, sc, mapOfBlocks)
-
     # write the properties in a file
-    MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, dictNbLinesPerBlocks_, mapOfBlocks, sc)
+    MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, nbLinesPerBlocks, mapOfBlocks, sc)
 
-main(5000,128,175000)
-
-
+main(5000,128)
