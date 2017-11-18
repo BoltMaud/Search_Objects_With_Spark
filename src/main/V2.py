@@ -93,4 +93,5 @@ def main(TOTALSIZE, SIZEOFBLOCK):
     # write the properties in a file
     MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, nbLinesPerBlocks, mapOfBlocks, sc)
 
-main(5000,128)
+#comment for test
+#main(5000,128)
