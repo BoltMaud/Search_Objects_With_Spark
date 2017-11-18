@@ -16,8 +16,11 @@ def createHist(file,name):
     width = 1.0
     fig = plt.figure()
     plt.bar(x, height, width, color='b')
+    plt.ylabel('number of sources')
+    plt.xlabel('block numbers')
+    plt.title(name)
     plt.savefig(name)
     plt.show()
 
 
-createHist("result_sample_V2.csv","test")
+createHist("result_sample_V1.csv","hist_sample_V1")
