@@ -1,5 +1,4 @@
 import pytest
-
 from src.main import V2
 from src.main import MapOfBlocks
 

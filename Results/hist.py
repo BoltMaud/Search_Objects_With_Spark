@@ -23,4 +23,4 @@ def createHist(file,name):
     plt.show()
 
 
-createHist("result_sample_V1.csv","hist_sample_V1")
+createHist("result_prod_V3.csv","hist_prod_V3")

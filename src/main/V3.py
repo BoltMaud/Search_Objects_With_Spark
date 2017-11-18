@@ -6,8 +6,13 @@
 
 import sys
 from pyspark import SparkContext
-from src.main import mymath
-from src.main import MapOfBlocks
+import sys
+
+#comment to test
+#from src.main import MapOfBlocks
+#from src.main import mymath
+import MapOfBlocks
+import mymath
 
 
 '''
@@ -99,4 +104,4 @@ def main(TOTALSIZE, SIZEOFBLOCK):
     MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, nbLinesPerBlocks, mapOfBlocks, sc)
 
 #comment for test
-#main(5000,128)
+main(5000,128)

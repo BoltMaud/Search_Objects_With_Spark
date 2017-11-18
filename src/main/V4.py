@@ -7,9 +7,12 @@
 
 import sys
 from pyspark import SparkContext
-from src.main import mymath
-from src.main import MapOfBlocks
 
+#comment to test
+#from src.main import MapOfBlocks
+#from src.main import mymath
+import MapOfBlocks
+import mymath
 
 '''
 get min and max of lambda and B
@@ -70,7 +73,7 @@ def partitioning_V3(dir,dir_result,sc,dict):
     .flatMap(lambda x : x.split("_") )\
     .map(lambda x : x.split(':')) \
         .map(lambda x: (int(x[0]), x[1])) \
-        .partitionBy(dict.nbBlocks) \
+        .partitionBy(len(dict.dictOfCoord)) \
         .saveAsHadoopFile(dir_result, "org.apache.hadoop.mapred.TextOutputFormat" )
 
 '''
@@ -130,6 +133,6 @@ def main(TOTALSIZE, SIZEOFBLOCK,NBLINESPERBLOCK):
     MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, dictNbLinesPerBlocks_, mapOfBlocks, sc)
 
 #comment to test
-#main(5000,128,175000)
+main(5000,128,175000)
 
 

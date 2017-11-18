@@ -4,9 +4,12 @@
 ####                     Version with simple partitions                             ######
 ##########################################################################################
 
-import sys
 from pyspark import SparkContext
-from src.main import MapOfBlocks
+
+#from src.main import MapOfBlocks
+import sys
+#comment to test
+import MapOfBlocks
 
 
 '''
@@ -90,4 +93,4 @@ def main(TOTALSIZE, SIZEOFBLOCK):
     MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, nbLinesPerBlocks, mapOfBlocks, sc)
 
 #comment for the tests
-#main(5000,128)
+main(5000,128)

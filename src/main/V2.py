@@ -7,7 +7,11 @@
 
 import sys
 from pyspark import SparkContext
-from src.main import MapOfBlocks
+
+#comment to test
+#from src.main import MapOfBlocks
+import MapOfBlocks
+
 
 '''
 get the min and max of ra and decl from a csv file or a directory
@@ -94,4 +98,4 @@ def main(TOTALSIZE, SIZEOFBLOCK):
     MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, nbLinesPerBlocks, mapOfBlocks, sc)
 
 #comment for test
-#main(5000,128)
+main(5000,128)
