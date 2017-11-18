@@ -1,7 +1,7 @@
 from pyspark import SparkContext
 import sys
 
-from TP2.src import mymath
+from . import mymath
 from . import MapOfBlocks
 import matplotlib.pyplot as plt
 import numpy
