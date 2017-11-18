@@ -129,6 +129,7 @@ def main(TOTALSIZE, SIZEOFBLOCK,NBLINESPERBLOCK):
     # write the properties in a file
     MapOfBlocks.writeNbLinesInPropertiesFile(resultDirectory, dictNbLinesPerBlocks_, mapOfBlocks, sc)
 
-main(5000,128,175000)
+#comment to test
+#main(5000,128,175000)
 
 
