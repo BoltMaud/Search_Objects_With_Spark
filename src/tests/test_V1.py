@@ -17,6 +17,13 @@ def test_get_block_number_with_margins_v2(spark_context):
 
     # first version
     mapOfBlocks.create_dict_coord()
+    
+    assert mapOfBlocks.nbBlocks==40
+
+    assert mapOfBlocks.max_ra==358.0904167299142
+    assert mapOfBlocks.min_ra==357.9542095807038
+    assert mapOfBlocks.max_decl==3.1752713951351934
+    assert mapOfBlocks.min_decl==2.5646291352701804
 
     #get number of lines per blocks
     nbLinesPerBlocks = V1.getNbLinePerPatition_V1(sourceDirectory, spark_context, mapOfBlocks)
