@@ -102,7 +102,6 @@ class MapOfBlocks :
                     max_ra=self.max_ra
                 dict[num] = ((self.min_ra+i*self.step_ra,max_ra ), (self.min_decl+j*self.step_decl,max_decl))
                 num += 1
-        print(dict)
         self.dictOfCoord=dict
 
     '''
@@ -110,11 +109,8 @@ class MapOfBlocks :
     version 1 : without margin
     '''
     def get_block_number_without_margin(self, ra, decl):
-        print(ra)
-        print(decl)
         for key in self.dictOfCoord:
             if ra >= self.dictOfCoord[key][0][0] and ra <= self.dictOfCoord[key][0][1] and decl >= self.dictOfCoord[key][1][0] and decl <= self.dictOfCoord[key][1][1]:
-                print(key)
                 return key
         # error
         return 0
