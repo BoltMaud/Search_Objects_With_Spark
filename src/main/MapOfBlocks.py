@@ -1,4 +1,5 @@
-from . import mymath
+from src.main import mymath
+
 
 class MapOfBlocks :
 
@@ -209,3 +210,13 @@ class MapOfBlocks :
 
 # ----------------------------------------------------------------------------------------------
 # End of class MapOfBlocks
+
+'''
+write a file with the properties 
+'''
+def writeNbLinesInPropertiesFile(resultDirectory,nbLinesPerBlocks,mapOfBlocks,sc):
+    text=mapOfBlocks.getPropertiesAsString()
+    text+="block number,nbLines\n"
+    for block in nbLinesPerBlocks:
+       text+=str(block[0])+","+str(block[1])+"\n"
+    sc.parallelize((text,1)).saveAsTextFile(resultDirectory+"/properties")
