@@ -117,4 +117,4 @@ occuper de la place non voulue par l'utilisateur des tests.
 
 Les résultats obtenus pour le fichier sample avec une grille de 40 blocs à l'initialisation sont : 
 
-![bla](Results/result_sample_V1.png)
+![bla](./Results/result_sample_V1.png)
