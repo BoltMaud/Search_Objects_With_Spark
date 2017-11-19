@@ -127,7 +127,7 @@ Afin de s'assurer qu'aucun bloc ne dépasse ce nombre, nous pourrions faire auta
     fin du tant que 
 3. patitionner avec le dictionnaire des blocs 
 ```
-Dans notre cas, nous nous sommes contentés d'une seule division pour des raisons de vitesses de calculs sur les serveurs hadoop. 
+`Dans notre cas, nous nous sommes contentés d'une seule division pour des raisons de vitesses de calculs sur les serveurs hadoop. `
 
 # Résultats 
 
@@ -171,6 +171,9 @@ On remarque facilement qu'avec un même nombre de blocs, il y a cette fois beauc
 ### Dernière approche (V4)
 Dans cette dernière version de partitionnement, on considère non seulement les coordonnées écliptiques et la duplication des sources, mais aussi la **redivision de blocs** trop volumineux. 
 On observe donc en sortie qu'il y a plus de blocs remplis, et que le nombre de sources dans les blocs a majestueusement diminué. 
+
+`Rappel :` Nous n'avons pas poursuivi la division des blocs jusqu'à un nombre de lignes minimal voulu pour des raisons de vitesses de calculs sur les serveurs hadoop et de partage de ressources avec nos camarades.
+Cependant, la technique a été développé dans la section **Démarche** et devrait fonctionner. 
 
 <img src="./Results/hist_prod_V4.png" alt="Version 1" width="450px"/>  
 
