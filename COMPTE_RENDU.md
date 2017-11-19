@@ -117,4 +117,16 @@ occuper de la place non voulue par l'utilisateur des tests.
 
 Les résultats obtenus pour le fichier sample avec une grille de 40 blocs à l'initialisation sont : 
 
-![bla](../tree/master/Results/result_sample_V1.png)
+<img src="./Results/hist_sample_V1.png" alt="Version 1" style="width: 200px;"/>
+| ![s1](./Results/hist_sample_V1.png) | ![](./Results/hist_sample_V2.png) |
+| ![s3](./Results/hist_sample_V3.png) | ![](./Results/hist_sample_V4.png) |
+
+
+Ainsi que leur fichier de propriétés :
+
+|a|b|
+|c|d|
+
+| ![Version 1 sur source-sample](./Results/result_sample_V1.csv) | ![Version 2 sur source-sample](./Results/result_sample_V2.csv) |
+| ![Version 3 sur source-sample](./Results/result_sample_V3.csv) | ![Version 4 sur source-sample](./Results/result_sample_V4.csv) |
+
