@@ -18,7 +18,6 @@ Ce projet contient nos quatres versions fonctionnelles ainsi que leur test unita
 | V2.py   | Ajout de recoupement, 5% |
 | V3.py   | Modification des coordonnées célestes |
 | V4.py   | Meilleure répartition des blocs |
-<br>
 
 Voici une vue globale de l'arborescence du projet : 
 <pre>  
