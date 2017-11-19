@@ -109,8 +109,15 @@ def getB(ra, decl):
     b= math.asin( ( math.cos(e) * math.sin(decl)) - (math.sin(e)*math.sin(ra)*math.cos(decl))  )
     return b
 ```
+Ce changement de coordonnées doit permettre d'obtenir une meilleure répartition des sources dans les blocs, mais pour l'instant, sans limite maximale sur la taille du bloc. 
 
-# Production 
+### Redivision de cases trop chargées (V4)
+Dans cette dernière amélioration, on cherche à répartir au mieux les sources, mais aussi à créer des blocs de volume limité. Ainsi, si un bloc contient trop de sources, on le divise.
+Pour faire cela, on calcule une première fois le nombre de blocs à créer. On récupère le nombre de blocs vides dûs à la répartition inégales des sources. On les supprime de la liste de blocs, et on les réutilise en modifiant les coordonées pour diviser les blocs existants.
+S'il n'y a plus de bloc vide, on en crée dix nouveaux. On répartit ensuite les sources dans les blocs, de manière à ce qu'aucun bloc ne fasse plus de **128Mo**. 
+Nous avons calculé manuellement le nombre de lignes approximatif d'un fichier de maximum 128Mo. Cela revient à écrire moins de **175000** lignes par bloc. 
+
+# Résultats 
 
 ### Première approximation
 Une première version permet de répartir les sources dans des cases de **dimensions fixes**. Cela a pour effet de créer des partitions très lourdes (avec beaucoup de sources), et d'autres quasiment vides, puisque les sources sont très inégalement réparties sur la grille. 
@@ -118,7 +125,8 @@ On observe facilement l'inaglité de répartition sur les histogrammes suivants 
 
 <img src="./Results/hist_prod_V1.png" alt="Version 1" width="450px"/>  Le fichier de propriétés correspondant : ![Résultats de la version 1 sur le dossier Source](./Results/result_prod_V1.csv) 
 
-[lien vers fichiers des propriétés ]
+On observe dans cette première division naïve que les sources sont réparties dans 40 blocs, donc 40 fichiers csv. En effet, le nombre de blocs est basé uniquement sur le volume des sources et non sur leur répartition.
+Ainsi de nombreux fichiers sont vides, tandis que d'autres contiennent un nombre de lignes trop conséquents. 
 
 ### Deuxième approche 
 Dans cette deuxième approche, on considère un certain **recoupement** (ici 5%) entre les blocs. Cela implique que les fichiers csv résultants du partitionnement contiennent plus de lignes. Cependant, on doit avoir le même nombre de partitions que dans la première approche. 
@@ -126,11 +134,10 @@ On constate que c'est bien ce qu'on obtient grâce aux histogrammes ci-dessous :
 
 <img src="./Results/hist_prod_V2.png" alt="Version 1" width="450px"/>  Le fichier de propriétés correspondant : ![Résultats de la version 2 sur le dossier Source](./Results/result_prod_V2.csv)  
 
-[lien vers fichiers des propriétés ]
-
+On observe ici que le nombre de blocs remplis est le même. Cependant les fichiers contiennent plus de lignes, c'est-à-dire plus de sources, puisque les sources proches des bordures sont dupliquées dans plusieurs blocs, donc plusieurs fichiers. 
 
 ### Troisième approche
-Jusqu'à présent, on utilisait les coordonnées célestes (`ra` et `decl`) pour répartir les sources. Afin d'avoir une meilleure approximation, on utilise ra et decl pour calculer les coordonnées écliptiques `lambda` et `beta`. 
+Jusqu'à présent, on utilisait les coordonnées célestes (`ra` et `decl`) pour répartir les sources. Afin d'avoir une meilleure approximation, on utilise `ra` et `decl` pour calculer les coordonnées écliptiques `lambda` et `beta` qui correspondent à la latitude et la longitude. 
 
 
 # Test en local avec pystest 
