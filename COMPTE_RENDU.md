@@ -98,7 +98,7 @@ On constate que c'est bien ce qu'on obtient grâce aux histogrammes ci-dessous :
 Jusqu'à présent, on utilisait les coordonnées célestes (`ra` et `decl`) pour répartir les sources. Afin d'avoir une meilleure approximation, on utilise ra et decl pour calculer les coordonnées écliptiques `lambda` et `beta`. 
 
 
-# Test en Local avec pystest 
+# Test en local avec pystest 
 
 Les tests unitaires ont été fait en local sur nos PC personnels avec à l'installation de spark, hadoop et `pytest` avec la configuration expliquez [ici](https://github.com/BoltMaud/Pyspark_pytest/blob/master/README.md). Le fichier `conftest.py`
 est nécessaire à la configuration des tests. 
@@ -111,22 +111,32 @@ Il faut aussi décommenter la ligne du lancement du main, dernière ligne du fic
 py.test ./src/test/test_Vi.py
 ```
 
-Les tests utilisent le fichier **source-sample.csv** et vérifient le nombre de blocs, les min et max des variables **ra** et **decl** ainsi que le nombre de source par bloc.
+Les tests utilisent le fichier **source-sample.csv** et vérifient le nombre de blocs, les min et max des variables **ra** et **decl** ainsi que le nombre de source par bloc, (ci-dessous un exemple du test_V1)
+
+```sh 
+assert mapOfBlocks.nbBlocks == 40
+assert mapOfBlocks.max_ra == 358.0904167299142
+assert mapOfBlocks.min_ra == 357.9542095807038
+assert mapOfBlocks.max_decl == 3.1752713951351934
+assert mapOfBlocks.min_decl == 2.5646291352701804
+```
 Il possible d'obtenir les fichiers des blocs ainsi que les fichiers de propriétés en décommentant les dernières lignes des fichiers tests. Ces lignes ont été volontairement commentées afin de ne pas
 occuper de la place non voulue par l'utilisateur des tests. 
 
 Les résultats obtenus pour le fichier sample avec une grille de 40 blocs à l'initialisation sont : 
 
-<img src="./Results/hist_sample_V1.png" alt="Version 1" style="width: 50px;"/>
-| ![s1](./Results/hist_sample_V1.png) | ![](./Results/hist_sample_V2.png) |
-| ![s3](./Results/hist_sample_V3.png) | ![](./Results/hist_sample_V4.png) |
+
+<img src="./Results/hist_sample_V1.png" alt="Version 1" width="450px"/>   <img src="./Results/hist_sample_V2.png" alt="Version 1" width="450px"/> 
+<img src="./Results/hist_sample_V3.png" alt="Version 1" width="450px"/> <img src="./Results/hist_sample_V4.png" alt="Version 1" width="450px"/> 
+ 
+On a bien les résultats attendus avec une augementation du nombre de sources par bloc entre la version 1 et la version 2 due aux marges. Puis de la version 2 à la version 3, on constate que la répartition est 
+mieux gérée grace au changement de repère. Enfin de la version 3 à la version 4, on diminue le nombre de sources par bloc grâce à la division des gros blocs. 
 
 
 Ainsi que leur fichier de propriétés :
 
-| a | b |
-| c | d |
-
-| ![Version 1 sur source-sample](./Results/result_sample_V1.csv) | ![Version 2 sur source-sample](./Results/result_sample_V2.csv) |
-| ![Version 3 sur source-sample](./Results/result_sample_V3.csv) | ![Version 4 sur source-sample](./Results/result_sample_V4.csv) |
+* ![Résultats de la version 1 sur source-sample](./Results/result_sample_V1.csv) 
+* ![Résultats de la version 2 sur source-sample](./Results/result_sample_V2.csv) 
+* ![Résultats de la version 3 sur source-sample](./Results/result_sample_V3.csv) 
+* ![Résultats de la version 4 sur source-sample](./Results/result_sample_V4.csv) 
 
