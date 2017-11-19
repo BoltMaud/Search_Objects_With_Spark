@@ -131,6 +131,12 @@ Dans notre cas, nous nous sommes contentés d'une seule division pour des raison
 
 # Résultats 
 
+Pour lancer le partitionnement, on utilise le script python de la version voulue, suivi des sources en paramètres et du répertoire où stocker les résultats sur HDFS. 
+Par exemple, pour lancer le partitionnement le plus équilibré possible (V4), on utilise la commande : 
+```sh
+spark-submit ./src/main/V4.py /tp-data/Source ./resultats
+```
+
 ### Première approximation (V1)
 Une première version permet de répartir les sources dans des cases de **dimensions fixes**. Cela a pour effet de créer des partitions très lourdes (avec beaucoup de sources), et d'autres quasiment vides, puisque les sources sont très inégalement réparties sur la grille. 
 On observe facilement l'inaglité de répartition sur les histogrammes suivants : 
