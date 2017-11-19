@@ -121,7 +121,7 @@ Afin de s'assurer qu'aucun bloc ne dépasse ce nombre, nous pourrions faire auta
 
 ```sh
 1. compter le nombre de sources par blocs avec un partionnement simple
-2. tant qu'il reste au moins un bloc qui contient trop de sources
+2. tant qu il reste au moins un bloc qui contient trop de sources
      |   faire une division de ces blocs
      |   re-compter le nombre de sources par blocs
     fin du tant que 
