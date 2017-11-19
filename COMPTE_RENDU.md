@@ -8,6 +8,15 @@
 
 >Outils : pyspark, pytest  
 
+# Etudiants
+
+compte_etudiant1: p1610748
+nom_etudiant1: Boltenhagen
+prenom_etudiant1: Mathilde
+compte_etudiant2: p1309529
+nom_etudiant2: Montel
+prenom_etudiant2: Alice
+
 # Introduction  
 
 Ce projet contient nos quatres **versions fonctionnelles** ainsi que leur test unitaire. Voici, ci-dessous, une correspondance entre le numéro de version et **l'extension ajoutée par rapport à la version précédante** :
@@ -47,6 +56,9 @@ Voici une vue globale de l'arborescence du projet :
          └ conftest.py
      
  ├ COMPTE_RENDU.MD
+ ├ etudiants.yml
+ 
+ 
 </pre>
 
 
@@ -84,13 +96,13 @@ Un fichier des propriétés est aussi créé dans le ficher csv `resultats/prope
 ### Première approximation
 Une première version permet de répartir les sources dans des cases de **dimensions fixes**. Cela a pour effet de créer des partitions très lourdes (avec beaucoup de sources), et d'autres quasiment vides, puisque les sources sont très inégalement réparties sur la grille. 
 On observe facilement l'inaglité de répartition sur les histogrammes suivants : 
-[HISTOGRAMS_V1]
+<img src="./Results/hist_prod_V1.png" alt="Version 1" width="450px"/> 
 [lien vers fichiers des propriétés ]
 
 ### Deuxième approche 
 Dans cette deuxième approche, on considère un certain **recoupement** (ici 5%) entre les blocs. Cela implique que les fichiers csv résultants du partitionnement contiennent plus de lignes. Cependant, on doit avoir le même nombre de partitions que dans la première approche. 
 On constate que c'est bien ce qu'on obtient grâce aux histogrammes ci-dessous : 
-[HISTOGRAMS_V2]
+<img src="./Results/hist_prod_V2.png" alt="Version 1" width="450px"/> 
 [lien vers fichiers des propriétés ]
 
 
