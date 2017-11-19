@@ -196,7 +196,7 @@ class MapOfBlocks :
      write the properties of a MapOfBlocks in a file
      '''
     def getPropertiesAsString(self):
-        text = "Size Of Map, " + str(self.nbBlocks) + "\n"
+        text = "Size Of Map, " + str(len(self.dictOfCoord)) + "\n"
         text += "Number of rows," + str(self.nbRows) + "\n"
         text += "Number of Cols," + str(self.nbCols) + "\n"
         text += "Coordinates of Blocks : \n"

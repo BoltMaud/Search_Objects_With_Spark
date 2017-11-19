@@ -5,9 +5,9 @@
 ##########################################################################################
 
 from pyspark import SparkContext
+import sys
 
 #from src.main import MapOfBlocks
-import sys
 #comment to test
 import MapOfBlocks
 
