@@ -113,9 +113,21 @@ Ce changement de coordonnées doit permettre d'obtenir une meilleure répartitio
 
 ### Redivision de cases trop chargées (V4)
 Dans cette dernière amélioration, on cherche à répartir au mieux les sources, mais aussi à créer des blocs de volume limité. Ainsi, si un bloc contient trop de sources, on le divise.
-Pour faire cela, on calcule une première fois le nombre de blocs à créer. On récupère le nombre de blocs vides dûs à la répartition inégales des sources. On les supprime de la liste de blocs, et on les réutilise en modifiant les coordonées pour diviser les blocs existants.
-S'il n'y a plus de bloc vide, on en crée dix nouveaux. On répartit ensuite les sources dans les blocs, de manière à ce qu'aucun bloc ne fasse plus de **128Mo**. 
-Nous avons calculé manuellement le nombre de lignes approximatif d'un fichier de maximum 128Mo. Cela revient à écrire moins de **175000** lignes par bloc. 
+Pour faire cela, on calcule une première fois le nombre de blocs à créer. On récupère le nombre de blocs vides dûs à la répartition inégales des sources. On les supprime de la liste de blocs, et on les réutilise en modifiant les coordonées pour diviser les blocs existants trop volumineux.
+S'il n'y a plus de bloc vide, on en crée des nouveaux (par dix).
+
+Nous avons calculé manuellement le nombre de lignes approximatif d'un fichier de maximum 128Mo à partir du fichier source-sample. Cela revient à écrire moins de **175000** sources par bloc.
+Afin de s'assurer qu'aucun bloc ne dépasse ce nombre, nous pourrions faire autant de divisions que nécessaire de la manière suivante  :
+
+```sh
+1. compter le nombre de sources par blocs avec un partionnement simple
+2. tant qu'il reste au moins un bloc qui contient trop de sources
+     |   faire une division de ces blocs
+     |   re-compter le nombre de sources par blocs
+    fin du tant que 
+3. patitionner avec le dictionnaire des blocs 
+```
+Dans notre cas, nous nous sommes contentés d'une seule division pour des raisons de vitesses de calculs sur les serveurs hadoop. 
 
 # Résultats 
 
@@ -143,8 +155,8 @@ Afin d'avoir une meilleure approximation, on utilise `ra` et `decl` pour calcule
 <img src="./Results/hist_prod_V3.png" alt="Version 1" width="450px"/>  Le fichier de propriétés correspondant : ![Résultats de la version 3 sur le dossier Source](./Results/result_prod_V3.csv)  
 
 ### Dernière approche (V4)
-Dans cette dernière version de partitionnement, on considère non seulement les coordonnées écliptiques et la duplication des sources, mais aussi le redivision de blocs trop volumineux. 
-On observe donc en sortie qu'il y a plus de blocs remplis, et que le nombre de lignes dans les blocs n'excèdent jamais 175000 lignes. 
+Dans cette dernière version de partitionnement, on considère non seulement les coordonnées écliptiques et la duplication des sources, mais aussi la redivision de blocs trop volumineux. 
+On observe donc en sortie qu'il y a plus de blocs remplis, et que le nombre de sources dans les blocs a majestueusement diminué. 
 
 <img src="./Results/hist_prod_V4.png" alt="Version 1" width="450px"/>  Le fichier de propriétés correspondant : ![Résultats de la version 4 sur le dossier Source](./Results/result_prod_V4.csv)  
 
