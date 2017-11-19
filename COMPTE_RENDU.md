@@ -114,3 +114,7 @@ py.test ./src/test/test_Vi.py
 Les tests utilisent le fichier **source-sample.csv** et vérifient le nombre de blocs, les min et max des variables **ra** et **decl** ainsi que le nombre de source par bloc.
 Il possible d'obtenir les fichiers des blocs ainsi que les fichiers de propriétés en décommentant les dernières lignes des fichiers tests. Ces lignes ont été volontairement commentées afin de ne pas
 occuper de la place non voulue par l'utilisateur des tests. 
+
+Les résultats obtenus pour le fichier sample avec une grille de 40 blocs à l'initialisation sont : 
+
+| ![](Results/result_sample_V1.png)|
