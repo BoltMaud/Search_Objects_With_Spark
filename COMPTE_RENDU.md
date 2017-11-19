@@ -10,29 +10,23 @@
 
 # Etudiants
 
-compte_etudiant1: p1610748
-
-nom_etudiant1: Boltenhagen
-
-prenom_etudiant1: Mathilde
-
-compte_etudiant2: p1309529
-
-nom_etudiant2: Montel
-
-prenom_etudiant2: Alice
-
+compte_etudiant1: p1610748   
+nom_etudiant1: Boltenhagen    
+prenom_etudiant1: Mathilde    
+compte_etudiant2: p1309529    
+nom_etudiant2: Montel       
+prenom_etudiant2: Alice    
 
 # Introduction  
 
-Ce projet contient nos quatres **versions fonctionnelles** ainsi que leur test unitaire. Voici, ci-dessous, une correspondance entre le numéro de version et **l'extension ajoutée par rapport à la version précédante** :
+Ce projet contient nos quatres **versions fonctionnelles** ainsi que leur test unitaire. Voici, ci-dessous, une correspondance entre le numéro de version et **l'extension ajoutée par rapport à la version précédente** :
 
-| Version | Extension |
-| ------- | --------- |
-| V1.py   | Simple répartition|
-| V2.py   | Ajout de recoupement, 5% |
-| V3.py   | Modification des coordonnées célestes |
-| V4.py   | Meilleure répartition des blocs |
+| Version | Extension | 
+| ------- | --------- | 
+| V1.py   | Simple répartition| 
+| V2.py   | Ajout de recoupement, 5% | 
+| V3.py   | Modification des coordonnées célestes | 
+| V4.py   | Meilleure répartition des blocs | 
 
 Voici une vue globale de l'arborescence du projet : 
 <pre>  
@@ -95,7 +89,26 @@ spark-submit ./src/main/Vi.py /chemin/vers/sources /chemin/vers/resultats
 A la fin de l'exécution, le répertoire resultats contiendra une série de fichiers csv, nommé `part-00000`, `part-00001`, etc., contenant les lignes de sources de la partition adéquate. 
 Un fichier des propriétés est aussi créé dans le ficher csv `resultats/properties/part-00000`. Il contient le nombre de blocs, les coordonnées des blocs ainsi que le nombre de sources par blocs, une source étant une ligne.
 
+### Amélioration sur les bordures (V2)
+Suite au premier partionnement, on cherche à dupliquer les informations en bordure case pour simplifier l'accès à des sources proches entre elles, et proches de la bordure de leurs cases respectives.
+Pour cela, lorsqu'on attribue un bloc à chaque source à partir de son couple de coordonées (`ra` et `decl`), on ne le compare plus aux coordonées de la case, mais aux coordonnées de la case **+/- 5%**des valeurs. 
+Ainsi, une source proche de la bordure d'une case sera ajoutée non seulement dans le bloc de cette case, mais aussi dans le bloc de la case voisine. 
 
+### Amélioration sur la géométrie des coordonnées célestes (V3)
+Pour les premières approximation, on considère que la voûte céleste est un rectangle et que les coordonnées récupérées sont des coordonnées cartésiennes. Cela crée des zones de tailles très inégales, et donc un partitionnement mal réparti. 
+Nous avons donc transformé les coordonnées célestes en coordonnées écliptiques afin d'avoir une approximation plus exacte de leur placement. 
+Pour cela, nous avons créé deux fonctions mathématiques dans notre fichier **mymath.py** permettant de calculer `lambda` et `beta`, la latitude et longitude écliptiques de la source.   
+```sh
+def getL(ra, decl):
+    e = 23,439281
+    l = math.atan( ((math.sin(e)/math.cos(ra)) * math.tan(decl)) +( (math.cos(e)/math.cos(ra))*math.tan(ra)))
+    return l
+
+def getB(ra, decl):
+    e = 23,439281
+    b= math.asin( ( math.cos(e) * math.sin(decl)) - (math.sin(e)*math.sin(ra)*math.cos(decl))  )
+    return b
+```
 
 # Production 
 
@@ -103,7 +116,7 @@ Un fichier des propriétés est aussi créé dans le ficher csv `resultats/prope
 Une première version permet de répartir les sources dans des cases de **dimensions fixes**. Cela a pour effet de créer des partitions très lourdes (avec beaucoup de sources), et d'autres quasiment vides, puisque les sources sont très inégalement réparties sur la grille. 
 On observe facilement l'inaglité de répartition sur les histogrammes suivants : 
 
-<img src="./Results/hist_prod_V1.png" alt="Version 1" width="450px"/> 
+<img src="./Results/hist_prod_V1.png" alt="Version 1" width="450px"/>  Le fichier de propriétés correspondant : ![Résultats de la version 1 sur le dossier Source](./Results/result_prod_V1.csv) 
 
 [lien vers fichiers des propriétés ]
 
@@ -111,7 +124,7 @@ On observe facilement l'inaglité de répartition sur les histogrammes suivants 
 Dans cette deuxième approche, on considère un certain **recoupement** (ici 5%) entre les blocs. Cela implique que les fichiers csv résultants du partitionnement contiennent plus de lignes. Cependant, on doit avoir le même nombre de partitions que dans la première approche. 
 On constate que c'est bien ce qu'on obtient grâce aux histogrammes ci-dessous : 
 
-<img src="./Results/hist_prod_V2.png" alt="Version 1" width="450px"/> 
+<img src="./Results/hist_prod_V2.png" alt="Version 1" width="450px"/>  Le fichier de propriétés correspondant : ![Résultats de la version 2 sur le dossier Source](./Results/result_prod_V2.csv)  
 
 [lien vers fichiers des propriétés ]
 
@@ -122,7 +135,7 @@ Jusqu'à présent, on utilisait les coordonnées célestes (`ra` et `decl`) pour
 
 # Test en local avec pystest 
 
-Les tests unitaires ont été fait en local sur nos PC personnels avec à l'installation de spark, hadoop et `pytest` avec la configuration expliquez [ici](https://github.com/BoltMaud/Pyspark_pytest/blob/master/README.md). Le fichier `conftest.py`
+Les tests unitaires ont été faits en local sur nos PC personnels avec l'installation de spark, hadoop et `pytest` avec la configuration expliquée [ici](https://github.com/BoltMaud/Pyspark_pytest/blob/master/README.md). Le fichier `conftest.py`
 est nécessaire à la configuration des tests. 
 
 L'utilisation de spark-submit empêche la correspondance des packages et modules en python, ainsi les imports se font directement par le nom du fichier. Cependant pour le lancement des tests
@@ -155,7 +168,7 @@ On a bien les résultats attendus avec une augementation du nombre de sources pa
 mieux gérée grace au changement de repère. Enfin de la version 3 à la version 4, on diminue le nombre de sources par bloc grâce à la division des gros blocs. 
 
 
-Ainsi que leur fichier de propriétés :
+Ainsi que leurs fichiers de propriétés :
 
 * ![Résultats de la version 1 sur source-sample](./Results/result_sample_V1.csv) 
 * ![Résultats de la version 2 sur source-sample](./Results/result_sample_V2.csv) 
