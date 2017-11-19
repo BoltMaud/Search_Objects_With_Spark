@@ -10,7 +10,7 @@
 
 # Introduction  
 
-Ce projet contient nos quatres **versions fonctionnelles** ainsi que leur test unitaire. Voici, ci-dessous, une correspondance entre le numéro de version et ** l'extension ajoutée par rapport à la version précédante** :
+Ce projet contient nos quatres **versions fonctionnelles** ainsi que leur test unitaire. Voici, ci-dessous, une correspondance entre le numéro de version et **l'extension ajoutée par rapport à la version précédante** :
 
 | Version | Extension |
 | ------- | --------- |
