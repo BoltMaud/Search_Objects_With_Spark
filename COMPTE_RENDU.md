@@ -8,7 +8,50 @@
 
 >Outils : pyspark, pytest  
 
-# Utilisation 
+# Introduction  
+
+Ce projet contient nos quatres versions fonctionnelles ainsi que leur test unitaire. Voici, ci-dessous, une correspondance entre le numéro de version et l'extension ajoutée par rapport à la version précédante :
+
+| Version | Extension |
+| ------- | --------- |
+| V1.py   | Simple répartition|
+| V2.py   | Ajout de recoupement, 5% |
+| V3.py   | Modification des coordonnées célestes |
+| V4.py   | Meilleure répartition des blocs |
+<br>
+
+Voici une vue globale de l'arborescence du projet : 
+<pre>  
+ ┬  
+ ├ Results
+     ┬  
+     ├ result_prod_V1.csv
+     ├ hist_prod_V1.pgn 
+     └ ...
+ ├ Source 
+ ├ src  
+     ┬   
+     ├ main  
+         ┬  
+         ├ V1.py
+         ├ V2.py
+         ├ V3.py
+         ├ V4.py
+         ├ MapOfBlocks.py
+         └ mymath.py
+     └ test
+         ┬  
+         ├ test_V1.py
+         ├ test_V2.py
+         ├ test_V3.py
+         ├ test_V4.py
+         └ conftest.py
+     
+ ├ COMPTE_RENDU.MD
+</pre>
+
+
+
 
 # Démarche
 
@@ -27,9 +70,14 @@ On crée donc un dictionnaire python qui regroupe les blocs et leurs coordonnée
 Ensuite, pour chaque source, on récupère les coordonnées ra et decl et on cherche le bloc dans lequel elle devrait se trouver. Cela permet de compter le nombre de source qui devrait se trouver dans chaque bloc, et donc de compter le nombre de ligne par partition. 
 Ensuite, on répartit les sources et on les écrit dans des fichiers distincts correspondants aux blocs voulus. 
 On crée donc un fichier par partition sur HDFS, dans un répertoire précisé en paramètre lors du lancement de l'application, comme suit : 
-> spark-submit monapp.py /chemin/vers/sources /chemin/vers/resultats
+
+```sh
+spark-submit ./src/main/Vi.py /chemin/vers/sources /chemin/vers/resultats
+```
 
 A la fin de l'exécution, le répertoire resultats contiendra une série de fichiers csv, nommé `part-00000`, `part-00001`, etc., contenant les lignes de sources de la partition adéquate. 
+Un fichier des propriétés est aussi créé dans le ficher csv `resultats/properties/part-00000`. Il contient le nombre de blocs, les coordonnées des blocs ainsi que le nombre de sources par blocs, une source étant une ligne.
+
 
 
 # Production 
@@ -38,14 +86,32 @@ A la fin de l'exécution, le répertoire resultats contiendra une série de fich
 Une première version permet de répartir les sources dans des cases de **dimensions fixes**. Cela a pour effet de créer des partitions très lourdes (avec beaucoup de sources), et d'autres quasiment vides, puisque les sources sont très inégalement réparties sur la grille. 
 On observe facilement l'inaglité de répartition sur les histogrammes suivants : 
 [HISTOGRAMS_V1]
+[lien vers fichiers des propriétés ]
 
 ### Deuxième approche 
 Dans cette deuxième approche, on considère un certain **recoupement** (ici 5%) entre les blocs. Cela implique que les fichiers csv résultants du partitionnement contiennent plus de lignes. Cependant, on doit avoir le même nombre de partitions que dans la première approche. 
 On constate que c'est bien ce qu'on obtient grâce aux histogrammes ci-dessous : 
 [HISTOGRAMS_V2]
+[lien vers fichiers des propriétés ]
+
 
 ### Troisième approche
 Jusqu'à présent, on utilisait les coordonnées célestes (`ra` et `decl`) pour répartir les sources. Afin d'avoir une meilleure approximation, on utilise ra et decl pour calculer les coordonnées écliptiques `lambda` et `beta`. 
 
 
 # Test en Local avec pystest 
+
+Les tests unitaires ont été fait en local sur nos PC personnels avec à l'installation de spark, hadoop et `pytest` avec la configuration expliquez [ici](https://github.com/BoltMaud/Pyspark_pytest/blob/master/README.md). Le fichier `conftest.py`
+est nécessaire à la configuration des tests. 
+
+L'utilisation de spark-submit empêche la correspondance des packages et modules en python, ainsi les imports se font directement par le nom du fichier. Cependant pour le lancement des tests
+unitaires, il faut reprendre les packages. Les lignes **from src.main import MapOfBloc** et  **from src.main import mymath** doivent alors être décommentés. 
+Il faut aussi décommenter la ligne du lancement du main, dernière ligne du fichier. Il maintenant possible de lancer un test avec la commande suivante : 
+
+```sh
+py.test ./src/test/test_Vi.py
+```
+
+Les tests utilisent le fichier **source-sample.csv** et vérifient le nombre de blocs, les min et max des variables **ra** et **decl** ainsi que le nombre de source par bloc.
+Il possible d'obtenir les fichiers des blocs ainsi que les fichiers de propriétés en décommentant les dernières lignes des fichiers tests. Ces lignes ont été volontairement commentées afin de ne pas
+occuper de la place non voulue par l'utilisateur des tests. 
