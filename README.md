@@ -11,11 +11,13 @@
 
 # Introduction  
 
-Ce projet contient nos quatres **versions fonctionnelles** ainsi que leur test unitaire. Voici, ci-dessous, une correspondance entre le numéro de version et **l'extension ajoutée par rapport à la version précédente** :
+Ce projet contient quatres **versions fonctionnelles** ainsi que leur test unitaire de partionnement d'objects dans le ciel. Un serveur hadoop contient des données dans des fichiers csv d'objets du ciel avec leurs coordonnées spatiales. L'idée est de faire une meilleure répartition de ces objets dans de nouveaux fichiers csv de telle sorte à ce que les fichiers soit rangés en fonction de leurs coordonnées.
+
+Voici, ci-dessous, une correspondance entre le numéro de version et **l'extension ajoutée par rapport à la version précédente** :
 
 | Version | Extension | 
 | ------- | --------- | 
-| V1.py   | Simple répartition| 
+| V1.py   | Simple répartition | 
 | V2.py   | Ajout de recoupement, 5% | 
 | V3.py   | Modification des coordonnées célestes | 
 | V4.py   | Meilleure répartition des blocs | 
