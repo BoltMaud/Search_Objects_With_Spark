@@ -8,14 +8,6 @@
 
 >Outils : pyspark, pytest  
 
-# Etudiants
-
-compte_etudiant1: p1610748   
-nom_etudiant1: Boltenhagen    
-prenom_etudiant1: Mathilde    
-compte_etudiant2: p1309529    
-nom_etudiant2: Montel       
-prenom_etudiant2: Alice    
 
 # Introduction  
 
